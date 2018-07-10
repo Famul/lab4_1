@@ -3,10 +3,9 @@ package edu.iis.mto.multithread;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -14,32 +13,18 @@ public class BetterRadarTest {
 
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
+    PatriotBattery batteryMock;
+    BetterRadar radar;
 
-    /*
-     * static PatriotBattery batteryMock; static BetterRadar radar;
-     * 
-     * @BeforeClass public static void setUp() { batteryMock = mock(PatriotBattery.class); radar = new
-     * BetterRadar(batteryMock, Executors.newSingleThreadExecutor());
-     * 
-     * }
-     */
-    static PatriotBattery batteryMock;
-    static BetterRadar radar;
-
-    @AfterClass
-    public static void tearDown() {
-        batteryMock = null;
-        radar = null;
-    }
-
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setUp() {
+        Executor executor = Runnable::run;
         batteryMock = mock(PatriotBattery.class);
-        radar = new BetterRadar(batteryMock, Executors.newSingleThreadExecutor());
+        radar = new BetterRadar(batteryMock, executor);
     }
 
     @Test
-    @Repeat(times = 1000)
+    @Repeat(times = 10000)
     public void launchPatriotOnceWhenNoticesAScudMissle() {
         radar.notice(new Scud());
         verify(batteryMock).launchPatriot();
